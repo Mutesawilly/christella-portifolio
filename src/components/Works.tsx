@@ -1,33 +1,8 @@
 import { ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { projects } from "@/data/projects";
 
 const Works = () => {
-  const projects = [
-    {
-      title: "Bloom",
-      category: "Brand Identity",
-      description: "A fresh visual identity for a sustainable beauty brand",
-      color: "from-rose-soft to-primary/30",
-    },
-    {
-      title: "Mindful",
-      category: "Mobile App",
-      description: "Meditation app designed for students and young professionals",
-      color: "from-lavender-soft to-accent/30",
-    },
-    {
-      title: "Café Luna",
-      category: "Web Design",
-      description: "Website redesign for a local artisan coffee shop",
-      color: "from-cream-dark to-rose-soft/50",
-    },
-    {
-      title: "Wanderlust",
-      category: "Photography",
-      description: "A visual journey through European architecture",
-      color: "from-secondary to-lavender-soft/50",
-    },
-  ];
-
   return (
     <section id="works" className="py-24 md:py-32 bg-background">
       <div className="container max-w-6xl mx-auto px-6">
@@ -45,9 +20,10 @@ const Works = () => {
 
         <div className="grid md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
-            <article
-              key={project.title}
-              className={`group animate-fade-up-delay-${Math.min(index + 1, 3)}`}
+            <Link
+              to={`/projects/${project.id}`}
+              key={project.id}
+              className={`group block animate-fade-up-delay-${Math.min(index + 1, 3)}`}
             >
               <div className="relative overflow-hidden rounded-2xl shadow-card card-hover cursor-pointer">
                 {/* Project Image/Placeholder */}
@@ -80,19 +56,19 @@ const Works = () => {
                   {project.description}
                 </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
 
         {/* View All Link */}
         <div className="text-center mt-16 animate-fade-up">
-          <a
-            href="#"
+          <Link
+            to="/projects"
             className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors group"
           >
             View All Projects
             <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>
