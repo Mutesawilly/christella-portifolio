@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [activeInterest, setActiveInterest] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ const About = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -22,141 +22,143 @@ const About = () => {
     return () => observer.disconnect();
   }, []);
 
-  const words = [
-    { text: "Designer", emphasis: true },
-    { text: "based in", emphasis: false },
-    { text: "Barcelona", emphasis: true },
-    { text: "—", emphasis: false },
-    { text: "crafting", emphasis: false },
-    { text: "digital", emphasis: true },
-    { text: "experiences", emphasis: false },
-    { text: "with", emphasis: false },
-    { text: "intention", emphasis: true },
-    { text: "&", emphasis: false },
-    { text: "soul.", emphasis: true },
-  ];
-
   const interests = [
-    "UI/UX",
-    "Typography",
-    "Motion",
-    "Photography",
-    "Branding",
+    { label: "UI/UX", rotation: -3 },
+    { label: "Typography", rotation: 2 },
+    { label: "Motion", rotation: -1 },
+    { label: "Photography", rotation: 1.5 },
+    { label: "Branding", rotation: -2 },
   ];
 
   return (
     <section
       id="about"
       ref={sectionRef}
-      className="min-h-screen flex items-center py-24 md:py-32 bg-background relative"
+      className="min-h-screen relative py-24 md:py-32 bg-background overflow-hidden"
     >
-      <div className="container max-w-5xl mx-auto px-6">
-        {/* Minimal label */}
-        <div className="overflow-hidden mb-12">
-          <span
-            className={`inline-block text-xs uppercase tracking-[0.4em] text-muted-foreground transition-all duration-700 ${
-              isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-            }`}
-          >
+      {/* Decorative elements */}
+      <div className="absolute top-[20%] right-[10%] w-32 h-32 border border-border rounded-full opacity-30" />
+      <div className="absolute bottom-[30%] left-[5%] w-px h-24 bg-border" />
+      <div className="absolute top-[40%] left-[8%] w-2 h-2 bg-primary/30 rounded-full" />
+
+      <div className="relative px-6 md:px-12 lg:px-20">
+        {/* Section label - offset position */}
+        <div
+          className={`mb-20 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+          }`}
+        >
+          <span className="inline-flex items-center gap-4 text-xs uppercase tracking-[0.4em] text-muted-foreground">
+            <span className="w-8 h-px bg-border" />
             About
           </span>
         </div>
 
-        {/* Main flowing text - each word animates */}
-        <div className="mb-20">
-          <p className="font-display text-3xl md:text-4xl lg:text-5xl leading-relaxed md:leading-relaxed lg:leading-relaxed text-foreground">
-            {words.map((word, index) => (
-              <span
-                key={index}
-                className={`inline-block mr-3 md:mr-4 transition-all duration-700 cursor-default ${
-                  isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-                } ${
-                  word.emphasis
-                    ? "text-foreground hover:text-primary transition-colors duration-300"
-                    : "text-muted-foreground"
-                }`}
-                style={{ transitionDelay: `${index * 0.05}s` }}
-              >
-                {word.emphasis ? <em>{word.text}</em> : word.text}
-              </span>
-            ))}
-          </p>
-        </div>
-
-        {/* Two column minimal layout */}
-        <div className="grid md:grid-cols-2 gap-16 md:gap-24">
-          {/* Left - Short bio */}
+        {/* Main scattered layout */}
+        <div className="relative min-h-[70vh]">
+          
+          {/* Large statement - positioned off-center left */}
           <div
-            className={`transition-all duration-700 delay-500 ${
-              isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            className={`absolute top-0 left-0 md:left-[5%] max-w-lg transition-all duration-1000 delay-200 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
             }`}
           >
-            <p className="text-muted-foreground leading-relaxed font-body text-base">
-              Currently studying design at the University of Arts. I believe in 
-              the power of simplicity and the beauty of thoughtful details. 
-              Every project is an opportunity to create something meaningful.
+            <p className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground leading-snug">
+              <em className="text-primary">Designer</em> based in{" "}
+              <em className="text-primary">Barcelona</em>
+              <span className="text-muted-foreground">—</span>
             </p>
           </div>
 
-          {/* Right - Interests as interactive list */}
+          {/* Secondary text - positioned right with rotation */}
           <div
-            className={`transition-all duration-700 delay-700 ${
-              isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            className={`absolute top-32 md:top-24 right-0 md:right-[10%] max-w-xs rotate-1 transition-all duration-1000 delay-400 ${
+              isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"
             }`}
           >
-            <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-6 block">
-              Focus Areas
-            </span>
-            <div className="space-y-1">
-              {interests.map((interest, index) => (
-                <div
-                  key={interest}
-                  className="group relative overflow-hidden"
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
-                  <div
-                    className={`flex items-center justify-between py-3 border-b border-border cursor-default transition-all duration-300 ${
-                      hoveredIndex === index ? "pl-4" : "pl-0"
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed font-body">
+              crafting digital experiences with intention & soul.
+            </p>
+          </div>
+
+          {/* Bio paragraph - center-bottom area */}
+          <div
+            className={`absolute top-56 md:top-48 left-[10%] md:left-[20%] max-w-sm -rotate-1 transition-all duration-1000 delay-600 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
+            <p className="text-sm text-muted-foreground leading-relaxed font-body border-l-2 border-border pl-4">
+              Currently studying design at the University of Arts. I believe in 
+              the power of simplicity and the beauty of thoughtful details.
+            </p>
+          </div>
+
+          {/* Interests - scattered absolutely positioned pills */}
+          <div className="absolute top-80 md:top-72 left-0 right-0">
+            <div className="relative h-48 md:h-56">
+              {interests.map((interest, index) => {
+                // Scattered positions for each interest
+                const positions = [
+                  "left-[5%] top-0",
+                  "left-[30%] top-8 md:top-4",
+                  "right-[35%] top-0",
+                  "right-[10%] top-12 md:top-8",
+                  "left-[15%] top-24 md:top-20",
+                ];
+                
+                return (
+                  <button
+                    key={interest.label}
+                    className={`absolute ${positions[index]} transition-all duration-500 ${
+                      isVisible
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-8"
                     }`}
+                    style={{
+                      transitionDelay: `${0.8 + index * 0.1}s`,
+                      transform: `rotate(${activeInterest === index ? 0 : interest.rotation}deg)`,
+                    }}
+                    onMouseEnter={() => setActiveInterest(index)}
+                    onMouseLeave={() => setActiveInterest(null)}
                   >
                     <span
-                      className={`font-display text-lg transition-colors duration-300 ${
-                        hoveredIndex === index ? "text-primary" : "text-foreground"
+                      className={`inline-block px-4 py-2 text-sm font-body border rounded-full transition-all duration-300 ${
+                        activeInterest === index
+                          ? "bg-primary text-primary-foreground border-primary scale-105"
+                          : "bg-background border-border text-muted-foreground hover:border-primary/50"
                       }`}
                     >
-                      {interest}
+                      {interest.label}
                     </span>
-                    <span
-                      className={`text-xs text-muted-foreground transition-all duration-300 ${
-                        hoveredIndex === index ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
-                      }`}
-                    >
-                      0{index + 1}
-                    </span>
-                  </div>
-                  {/* Hover indicator line */}
-                  <div
-                    className={`absolute left-0 top-0 bottom-0 w-0.5 bg-primary transition-all duration-300 ${
-                      hoveredIndex === index ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                </div>
-              ))}
+                  </button>
+                );
+              })}
             </div>
           </div>
-        </div>
 
-        {/* Minimal decorative element */}
-        <div
-          className={`mt-24 flex items-center gap-4 transition-all duration-1000 delay-1000 ${
-            isVisible ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <div className="w-12 h-px bg-border" />
-          <span className="text-xs text-muted-foreground tracking-widest">
-            EST. 2024
-          </span>
+          {/* Decorative number */}
+          <div
+            className={`absolute bottom-0 right-[5%] md:right-[15%] transition-all duration-1000 delay-1000 ${
+              isVisible ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <span className="font-display text-8xl md:text-9xl text-border/50 select-none">
+              01
+            </span>
+          </div>
+
+          {/* Year marker */}
+          <div
+            className={`absolute bottom-8 left-0 flex items-center gap-4 transition-all duration-1000 delay-1200 ${
+              isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+            }`}
+          >
+            <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              Est. 2024
+            </span>
+            <div className="w-12 h-px bg-border" />
+          </div>
+
         </div>
       </div>
     </section>
